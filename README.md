@@ -1,2 +1,2 @@
-# gematria-calculator
+# Gematria Calculator
 Compute various gematria values
