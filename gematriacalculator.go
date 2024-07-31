@@ -2,19 +2,20 @@ package gematriacalculator
 
 import "unicode"
 
-type Method int
+type Cipher int
 
 const (
-	Ordinal Method = iota
+	Ordinal Cipher = iota
 	OrdinalReverse
 	Reduction
 	ReductionReverse
 	Sumerian
 	SumerianReverse
-	Jewish
+	HebrewLatinCharacters
+	Hebrew
 )
 
-func ComputeGematria(text string, method Method) int {
+func ComputeGematria(text string, method Cipher) int {
 	sum := 0
 	switch method {
 	case Ordinal:
@@ -47,9 +48,14 @@ func ComputeGematria(text string, method Method) int {
 			value := resolveLetterSumerianReverse(letter)
 			sum += value
 		}
-	case Jewish:
+	case HebrewLatinCharacters:
 		for _, letter := range text {
-			value := resolveLetterJewish(letter)
+			value := resolveLetterHebrewLatinCharacters(letter)
+			sum += value
+		}
+	case Hebrew:
+		for _, letter := range text {
+			value := resolveLetterHebrew(letter)
 			sum += value
 		}
 	}
@@ -113,7 +119,7 @@ func resolveLetterSumerianReverse(char rune) int {
 	return value * 6
 }
 
-func resolveLetterJewish(char rune) int {
+func resolveLetterHebrewLatinCharacters(char rune) int {
 	lowerChar := unicode.ToLower(char)
 	if int(lowerChar) < int('a') || int(lowerChar) > int('z') {
 		return 0
@@ -146,6 +152,40 @@ func resolveLetterJewish(char rune) int {
 		'j': 600,
 		'v': 700,
 		'w': 900,
+	}
+
+	value := charMap[char]
+	return value
+}
+
+func resolveLetterHebrew(char rune) int {
+	if int(char) < int('א') || int(char) > int('ת') {
+		return 0
+	}
+
+	charMap := map[rune]int{
+		'א': 1,
+		'ב': 2,
+		'ג': 3,
+		'ד': 4,
+		'ה': 5,
+		'ו': 6,
+		'ז': 7,
+		'ח': 8,
+		'ט': 9,
+		'י': 10,
+		'כ': 20,
+		'ל': 30,
+		'מ': 40,
+		'נ': 50,
+		'ס': 60,
+		'ע': 70,
+		'פ': 80,
+		'צ': 90,
+		'ק': 100,
+		'ר': 200,
+		'ש': 300,
+		'ת': 400,
 	}
 
 	value := charMap[char]

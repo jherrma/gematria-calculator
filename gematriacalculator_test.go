@@ -142,7 +142,7 @@ func TestSumerianReverse(t *testing.T) {
 	}
 }
 
-func TestJewish(t *testing.T) {
+func TestHebrewLatinCharacters(t *testing.T) {
 	tests := []struct {
 		char     rune
 		expected int
@@ -160,9 +160,89 @@ func TestJewish(t *testing.T) {
 		{'#', 0},
 	}
 	for _, test := range tests {
-		result := resolveLetterJewish(test.char)
+		result := resolveLetterHebrewLatinCharacters(test.char)
 		if result != test.expected {
 			t.Errorf("For character %c, expected custom value %d but got %d", test.char, test.expected, result)
+		}
+	}
+}
+
+func TestHebrew(t *testing.T) {
+	tests := []struct {
+		char     rune
+		expected int
+	}{
+		{'א', 1},
+		{'ח', 8},
+		{'צ', 90},
+		{'k', 0},
+		{'q', 0},
+		{'#', 0},
+	}
+	for _, test := range tests {
+		result := resolveLetterHebrew(test.char)
+		if result != test.expected {
+			t.Errorf("For character %c, expected custom value %d but got %d", test.char, test.expected, result)
+		}
+	}
+}
+
+func TestGematria(t *testing.T) {
+	tests := []struct {
+		text   string
+		cipher Cipher
+		value  int
+	}{
+		{
+			text:   "car",
+			cipher: Ordinal,
+			value:  22,
+		},
+		{
+			text:   "car",
+			cipher: OrdinalReverse,
+			value:  59,
+		},
+		{
+			text:   "car",
+			cipher: Reduction,
+			value:  13,
+		},
+		{
+			text:   "car",
+			cipher: ReductionReverse,
+			value:  23,
+		},
+		{
+			text:   "car",
+			cipher: Sumerian,
+			value:  132,
+		},
+		{
+			text:   "car",
+			cipher: SumerianReverse,
+			value:  354,
+		},
+		{
+			text:   "מְכוֹנִית",
+			cipher: Hebrew,
+			value:  526,
+		},
+		{
+			text:   "בַּיִת",
+			cipher: Hebrew,
+			value:  412,
+		},
+		{
+			text:   "דָּוִד",
+			cipher: Hebrew,
+			value:  14,
+		},
+	}
+	for _, test := range tests {
+		result := ComputeGematria(test.text, test.cipher)
+		if result != test.value {
+			t.Errorf("unexpected value for text %s with cipher %v: expected %d but got %d", test.text, test.cipher, test.value, result)
 		}
 	}
 }
