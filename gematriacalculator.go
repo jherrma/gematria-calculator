@@ -1,6 +1,8 @@
 package gematriacalculator
 
-import "unicode"
+import (
+	"unicode"
+)
 
 type Cipher int
 
@@ -17,45 +19,39 @@ const (
 
 func ComputeGematria(text string, method Cipher) int {
 	sum := 0
-	switch method {
-	case Ordinal:
-		for _, letter := range text {
-			value := resolveLetterOrdinal(letter)
-			sum += value
+
+	for _, letter := range text {
+		lowerLetter := unicode.ToLower(letter)
+
+		if int(lowerLetter) >= '0' && int(lowerLetter) <= '9' {
+			sum += resolveNumber(lowerLetter)
 		}
-	case OrdinalReverse:
-		for _, letter := range text {
-			value := resolveLetterOrdinalReverse(letter)
+
+		switch method {
+		case Ordinal:
+			value := resolveLetterOrdinal(lowerLetter)
 			sum += value
-		}
-	case Reduction:
-		for _, letter := range text {
-			value := resolveLetterReduction(letter)
+		case OrdinalReverse:
+			value := resolveLetterOrdinalReverse(lowerLetter)
 			sum += value
-		}
-	case ReductionReverse:
-		for _, letter := range text {
-			value := resolveLetterReductionReverse(letter)
+		case Reduction:
+			value := resolveLetterReduction(lowerLetter)
 			sum += value
-		}
-	case Sumerian:
-		for _, letter := range text {
-			value := resolveLetterSumerian(letter)
+
+		case ReductionReverse:
+			value := resolveLetterReductionReverse(lowerLetter)
 			sum += value
-		}
-	case SumerianReverse:
-		for _, letter := range text {
-			value := resolveLetterSumerianReverse(letter)
+		case Sumerian:
+			value := resolveLetterSumerian(lowerLetter)
 			sum += value
-		}
-	case HebrewLatinCharacters:
-		for _, letter := range text {
-			value := resolveLetterHebrewLatinCharacters(letter)
+		case SumerianReverse:
+			value := resolveLetterSumerianReverse(lowerLetter)
 			sum += value
-		}
-	case Hebrew:
-		for _, letter := range text {
-			value := resolveLetterHebrew(letter)
+		case HebrewLatinCharacters:
+			value := resolveLetterHebrewLatinCharacters(lowerLetter)
+			sum += value
+		case Hebrew:
+			value := resolveLetterHebrew(lowerLetter)
 			sum += value
 		}
 	}
@@ -63,65 +59,85 @@ func ComputeGematria(text string, method Cipher) int {
 	return sum
 }
 
-func resolveLetterOrdinal(char rune) int {
-	lowerChar := unicode.ToLower(char)
-	if int(lowerChar) < int('a') || int(lowerChar) > int('z') {
+func resolveNumber(char rune) int {
+	switch char {
+	case '0':
+		return 0
+	case '1':
+		return 1
+	case '2':
+		return 2
+	case '3':
+		return 3
+	case '4':
+		return 4
+	case '5':
+		return 5
+	case '6':
+		return 6
+	case '7':
+		return 7
+	case '8':
+		return 8
+	case '9':
+		return 9
+	default:
 		return 0
 	}
-	value := int(lowerChar - 'a' + 1)
+}
+
+func resolveLetterOrdinal(char rune) int {
+	if int(char) < int('a') || int(char) > int('z') {
+		return 0
+	}
+	value := int(char - 'a' + 1)
 	return value
 }
 
 func resolveLetterOrdinalReverse(char rune) int {
-	lowerChar := unicode.ToLower(char)
-	if int(lowerChar) < int('a') || int(lowerChar) > int('z') {
+	if int(char) < int('a') || int(char) > int('z') {
 		return 0
 	}
-	value := 26 - (int(lowerChar - 'a'))
+	value := 26 - (int(char - 'a'))
 	return value
 }
 
 func resolveLetterReduction(char rune) int {
-	lowerChar := unicode.ToLower(char)
-	if int(lowerChar) < int('a') || int(lowerChar) > int('z') {
+	if int(char) < int('a') || int(char) > int('z') {
 		return 0
 	}
 	mapping := "12345678912345678912345678"
-	value := int(mapping[int(lowerChar-'a')] - '0')
+	value := int(mapping[int(char-'a')] - '0')
 	return value
 }
 
 func resolveLetterReductionReverse(char rune) int {
-	lowerChar := unicode.ToLower(char)
-	if int(lowerChar) < int('a') || int(lowerChar) > int('z') {
+	if int(char) < int('a') || int(char) > int('z') {
 		return 0
 	}
 	reverseMapping := "87654321987654321987654321"
-	value := int(reverseMapping[int(lowerChar-'a')] - '0')
+	value := int(reverseMapping[int(char-'a')] - '0')
 	return value
 }
 
 func resolveLetterSumerian(char rune) int {
-	lowerChar := unicode.ToLower(char)
-	if int(lowerChar) < int('a') || int(lowerChar) > int('z') {
+	if int(char) < int('a') || int(char) > int('z') {
 		return 0
 	}
-	value := int(lowerChar - 'a' + 1)
+	value := int(char - 'a' + 1)
 	return value * 6
 }
 
 func resolveLetterSumerianReverse(char rune) int {
-	lowerChar := unicode.ToLower(char)
-	if int(lowerChar) < int('a') || int(lowerChar) > int('z') {
+	if int(char) < int('a') || int(char) > int('z') {
 		return 0
 	}
-	value := 26 - (int(lowerChar - 'a'))
+	value := 26 - (int(char - 'a'))
 	return value * 6
 }
 
 func resolveLetterHebrewLatinCharacters(char rune) int {
-	lowerChar := unicode.ToLower(char)
-	if int(lowerChar) < int('a') || int(lowerChar) > int('z') {
+	if int(char) < int('a') || int(char) > int('z') {
 		return 0
 	}
 

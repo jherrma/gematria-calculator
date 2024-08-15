@@ -10,10 +10,9 @@ func TestOrdinal(t *testing.T) {
 		{'a', 1},
 		{'b', 2},
 		{'z', 26},
-		{'A', 1},
-		{'B', 2},
-		{'Z', 26},
-		{'#', 0}, // Non-alphabet character, should return 0
+		{'0', 0},
+		{'8', 0},
+		{'#', 0},
 	}
 
 	for _, test := range tests {
@@ -32,10 +31,9 @@ func TestReverseOrdinal(t *testing.T) {
 		{'a', 26},
 		{'b', 25},
 		{'z', 1},
-		{'A', 26},
-		{'B', 25},
-		{'Z', 1},
-		{'#', 0}, // Non-alphabet character, should return 0
+		{'0', 0},
+		{'8', 0},
+		{'#', 0},
 	}
 
 	for _, test := range tests {
@@ -54,10 +52,9 @@ func TestReduction(t *testing.T) {
 		{'a', 1},
 		{'b', 2},
 		{'z', 8},
-		{'A', 1}, // Test uppercase, should also map to 1
-		{'B', 2}, // Test uppercase, should also map to 2
-		{'Z', 8}, // Test uppercase, should also map to 8
-		{'#', 0}, // Non-alphabet character, should return 0
+		{'0', 0},
+		{'8', 0},
+		{'#', 0},
 	}
 
 	for _, test := range tests {
@@ -76,10 +73,9 @@ func TestReductionReverse(t *testing.T) {
 		{'a', 8},
 		{'b', 7},
 		{'z', 1},
-		{'A', 8}, // Test uppercase, should also map to 8
-		{'B', 7}, // Test uppercase, should also map to 7
-		{'Z', 1}, // Test uppercase, should also map to 1
-		{'#', 0}, // Non-alphabet character, should return 0
+		{'0', 0},
+		{'8', 0},
+		{'#', 0},
 	}
 
 	for _, test := range tests {
@@ -100,12 +96,9 @@ func TestSumerian(t *testing.T) {
 		{'c', 18},
 		{'y', 150},
 		{'z', 156},
-		{'A', 6},   // Test uppercase, should also map to 6
-		{'B', 12},  // Test uppercase, should also map to 12
-		{'C', 18},  // Test uppercase, should also map to 18
-		{'Y', 150}, // Test uppercase, should also map to 150
-		{'Z', 156}, // Test uppercase, should also map to 156
-		{'#', 0},   // Non-alphabet character, should return 0
+		{'0', 0},
+		{'8', 0},
+		{'#', 0},
 	}
 
 	for _, test := range tests {
@@ -126,12 +119,9 @@ func TestSumerianReverse(t *testing.T) {
 		{'c', 144},
 		{'y', 12},
 		{'z', 6},
-		{'A', 156}, // Test uppercase, should also map to 6
-		{'B', 150}, // Test uppercase, should also map to 12
-		{'C', 144}, // Test uppercase, should also map to 18
-		{'Y', 12},  // Test uppercase, should also map to 150
-		{'Z', 6},   // Test uppercase, should also map to 156
-		{'#', 0},   // Non-alphabet character, should return 0
+		{'0', 0},
+		{'8', 0},
+		{'#', 0},
 	}
 
 	for _, test := range tests {
@@ -157,6 +147,8 @@ func TestHebrewLatinCharacters(t *testing.T) {
 		{'z', 500},
 		{'j', 600},
 		{'w', 900},
+		{'0', 0},
+		{'8', 0},
 		{'#', 0},
 	}
 	for _, test := range tests {
@@ -177,6 +169,8 @@ func TestHebrew(t *testing.T) {
 		{'צ', 90},
 		{'k', 0},
 		{'q', 0},
+		{'0', 0},
+		{'8', 0},
 		{'#', 0},
 	}
 	for _, test := range tests {
@@ -199,17 +193,27 @@ func TestGematria(t *testing.T) {
 			value:  22,
 		},
 		{
+			text:   "CAR",
+			cipher: Ordinal,
+			value:  22,
+		},
+		{
 			text:   "car",
 			cipher: OrdinalReverse,
 			value:  59,
 		},
 		{
-			text:   "car",
+			text:   "car7",
 			cipher: Reduction,
-			value:  13,
+			value:  20,
 		},
 		{
 			text:   "car",
+			cipher: ReductionReverse,
+			value:  23,
+		},
+		{
+			text:   "CAR",
 			cipher: ReductionReverse,
 			value:  23,
 		},
@@ -219,9 +223,14 @@ func TestGematria(t *testing.T) {
 			value:  132,
 		},
 		{
-			text:   "car",
+			text:   "car2",
 			cipher: SumerianReverse,
-			value:  354,
+			value:  356,
+		},
+		{
+			text:   "CAR1",
+			cipher: SumerianReverse,
+			value:  355,
 		},
 		{
 			text:   "מְכוֹנִית",
